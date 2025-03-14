@@ -1,10 +1,10 @@
 "use client"
 
-import { useEffect, useState, useCallback, useRef } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Handle, Position } from "reactflow"
-import { Slider } from "@/components/ui/slider"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Slider } from "@/components/ui/slider"
+import { useCallback, useEffect, useRef, useState } from "react"
+import { Handle, Position } from "reactflow"
 
 // Define the mapping of keyboard keys to MIDI notes
 const KEY_TO_NOTE: Record<string, number> = {
@@ -40,8 +40,6 @@ const KEY_TO_NOTE: Record<string, number> = {
 
 // Define the white keys for visualization
 const WHITE_KEYS = ["z", "x", "c", "v", "b", "n", "m", "q", "w", "e", "r", "t", "y", "u", "i"]
-// Define the black keys for visualization
-const BLACK_KEYS = ["s", "d", "g", "h", "j", "2", "3", "5", "6", "7"]
 
 interface MidiKeyboardProps {
   id: string
@@ -59,7 +57,6 @@ interface MidiKeyboardProps {
 
 export default function MidiKeyboard({ id, data }: MidiKeyboardProps) {
   const { updateNodeData, onNoteOn, onNoteOff } = data
-  const octave = data.octave || 4
   const waveform = data.waveform || "sine"
   const attack = data.attack || 0.05
   const release = data.release || 0.1
@@ -147,7 +144,7 @@ export default function MidiKeyboard({ id, data }: MidiKeyboardProps) {
   // Render the keyboard
   const renderKeyboard = () => {
     return (
-      <div className="relative h-32 mt-4">
+      <div className="relative mt-4 h-32">
         {/* White keys */}
         <div className="flex h-full">
           {WHITE_KEYS.map((key) => {
@@ -157,82 +154,72 @@ export default function MidiKeyboard({ id, data }: MidiKeyboardProps) {
             return (
               <div
                 key={key}
-                className={`border border-gray-300 flex-1 flex items-end justify-center pb-2 rounded-b ${
+                className={`flex flex-1 items-end justify-center rounded-b border border-gray-300 pb-2 ${
                   isActive ? "bg-blue-200" : "bg-white"
                 }`}
               >
-                <span className="text-xs text-gray-500 uppercase">{key}</span>
+                <span className="text-gray-500 text-xs uppercase">{key}</span>
               </div>
             )
           })}
         </div>
 
         {/* Black keys */}
-        <div className="absolute top-0 left-0 w-full flex">
+        <div className="absolute top-0 left-0 flex w-full">
           {/* First octave */}
-          <div className="invisible flex-1"></div> {/* C */}
-          <div
-            className={`h-20 w-8 -ml-4 z-10 rounded-b ${activeNotes[KEY_TO_NOTE["s"]] ? "bg-blue-400" : "bg-gray-800"}`}
-          >
-            <span className="text-xs text-white absolute bottom-2 left-1/2 transform -translate-x-1/2">s</span>
+          <div className="invisible flex-1" /> {/* C */}
+          <div className={`-ml-4 relative z-10 h-20 w-8 rounded-b ${activeNotes[KEY_TO_NOTE.s] ? "bg-blue-400" : "bg-gray-800"}`}>
+            <span className="-translate-x-1/2 absolute bottom-2 left-1/2 transform text-white text-xs">s</span>
           </div>
-          <div className="invisible flex-1"></div> {/* D */}
-          <div
-            className={`h-20 w-8 -ml-4 z-10 rounded-b ${activeNotes[KEY_TO_NOTE["d"]] ? "bg-blue-400" : "bg-gray-800"}`}
-          >
-            <span className="text-xs text-white absolute bottom-2 left-1/2 transform -translate-x-1/2">d</span>
+          <div className="invisible flex-1" /> {/* D */}
+          <div className={`-ml-4 relative z-10 h-20 w-8 rounded-b ${activeNotes[KEY_TO_NOTE.d] ? "bg-blue-400" : "bg-gray-800"}`}>
+            <span className="-translate-x-1/2 absolute bottom-2 left-1/2 transform text-white text-xs">d</span>
           </div>
-          <div className="invisible flex-1"></div> {/* E - no black key */}
-          <div className="invisible flex-1"></div> {/* F */}
-          <div
-            className={`h-20 w-8 -ml-4 z-10 rounded-b ${activeNotes[KEY_TO_NOTE["g"]] ? "bg-blue-400" : "bg-gray-800"}`}
-          >
-            <span className="text-xs text-white absolute bottom-2 left-1/2 transform -translate-x-1/2">g</span>
+          <div className="invisible flex-1" /> {/* E - no black key */}
+          <div className="invisible flex-1" /> {/* F */}
+          <div className={`-ml-4 relative z-10 h-20 w-8 rounded-b ${activeNotes[KEY_TO_NOTE.g] ? "bg-blue-400" : "bg-gray-800"}`}>
+            <span className="-translate-x-1/2 absolute bottom-2 left-1/2 transform text-white text-xs">g</span>
           </div>
-          <div className="invisible flex-1"></div> {/* G */}
-          <div
-            className={`h-20 w-8 -ml-4 z-10 rounded-b ${activeNotes[KEY_TO_NOTE["h"]] ? "bg-blue-400" : "bg-gray-800"}`}
-          >
-            <span className="text-xs text-white absolute bottom-2 left-1/2 transform -translate-x-1/2">h</span>
+          <div className="invisible flex-1" /> {/* G */}
+          <div className={`-ml-4 relative z-10 h-20 w-8 rounded-b ${activeNotes[KEY_TO_NOTE.h] ? "bg-blue-400" : "bg-gray-800"}`}>
+            <span className="-translate-x-1/2 absolute bottom-2 left-1/2 transform text-white text-xs">h</span>
           </div>
-          <div className="invisible flex-1"></div> {/* A */}
-          <div
-            className={`h-20 w-8 -ml-4 z-10 rounded-b ${activeNotes[KEY_TO_NOTE["j"]] ? "bg-blue-400" : "bg-gray-800"}`}
-          >
-            <span className="text-xs text-white absolute bottom-2 left-1/2 transform -translate-x-1/2">j</span>
+          <div className="invisible flex-1" /> {/* A */}
+          <div className={`-ml-4 relative z-10 h-20 w-8 rounded-b ${activeNotes[KEY_TO_NOTE.j] ? "bg-blue-400" : "bg-gray-800"}`}>
+            <span className="-translate-x-1/2 absolute bottom-2 left-1/2 transform text-white text-xs">j</span>
           </div>
-          <div className="invisible flex-1"></div> {/* B - no black key */}
+          <div className="invisible flex-1" /> {/* B - no black key */}
           {/* Second octave */}
-          <div className="invisible flex-1"></div> {/* C */}
+          <div className="invisible flex-1" /> {/* C */}
           <div
-            className={`h-20 w-8 -ml-4 z-10 rounded-b ${activeNotes[KEY_TO_NOTE["2"]] ? "bg-blue-400" : "bg-gray-800"}`}
+            className={`-ml-4 relative z-10 h-20 w-8 rounded-b ${activeNotes[KEY_TO_NOTE["2"]] ? "bg-blue-400" : "bg-gray-800"}`}
           >
-            <span className="text-xs text-white absolute bottom-2 left-1/2 transform -translate-x-1/2">2</span>
+            <span className="-translate-x-1/2 absolute bottom-2 left-1/2 transform text-white text-xs">2</span>
           </div>
-          <div className="invisible flex-1"></div> {/* D */}
+          <div className="invisible flex-1" /> {/* D */}
           <div
-            className={`h-20 w-8 -ml-4 z-10 rounded-b ${activeNotes[KEY_TO_NOTE["3"]] ? "bg-blue-400" : "bg-gray-800"}`}
+            className={`-ml-4 relative z-10 h-20 w-8 rounded-b ${activeNotes[KEY_TO_NOTE["3"]] ? "bg-blue-400" : "bg-gray-800"}`}
           >
-            <span className="text-xs text-white absolute bottom-2 left-1/2 transform -translate-x-1/2">3</span>
+            <span className="-translate-x-1/2 absolute bottom-2 left-1/2 transform text-white text-xs">3</span>
           </div>
-          <div className="invisible flex-1"></div> {/* E - no black key */}
-          <div className="invisible flex-1"></div> {/* F */}
+          <div className="invisible flex-1" /> {/* E - no black key */}
+          <div className="invisible flex-1" /> {/* F */}
           <div
-            className={`h-20 w-8 -ml-4 z-10 rounded-b ${activeNotes[KEY_TO_NOTE["5"]] ? "bg-blue-400" : "bg-gray-800"}`}
+            className={`-ml-4 relative z-10 h-20 w-8 rounded-b ${activeNotes[KEY_TO_NOTE["5"]] ? "bg-blue-400" : "bg-gray-800"}`}
           >
-            <span className="text-xs text-white absolute bottom-2 left-1/2 transform -translate-x-1/2">5</span>
+            <span className="-translate-x-1/2 absolute bottom-2 left-1/2 transform text-white text-xs">5</span>
           </div>
-          <div className="invisible flex-1"></div> {/* G */}
+          <div className="invisible flex-1" /> {/* G */}
           <div
-            className={`h-20 w-8 -ml-4 z-10 rounded-b ${activeNotes[KEY_TO_NOTE["6"]] ? "bg-blue-400" : "bg-gray-800"}`}
+            className={`-ml-4 relative z-10 h-20 w-8 rounded-b ${activeNotes[KEY_TO_NOTE["6"]] ? "bg-blue-400" : "bg-gray-800"}`}
           >
-            <span className="text-xs text-white absolute bottom-2 left-1/2 transform -translate-x-1/2">6</span>
+            <span className="-translate-x-1/2 absolute bottom-2 left-1/2 transform text-white text-xs">6</span>
           </div>
-          <div className="invisible flex-1"></div> {/* A */}
+          <div className="invisible flex-1" /> {/* A */}
           <div
-            className={`h-20 w-8 -ml-4 z-10 rounded-b ${activeNotes[KEY_TO_NOTE["7"]] ? "bg-blue-400" : "bg-gray-800"}`}
+            className={`-ml-4 relative z-10 h-20 w-8 rounded-b ${activeNotes[KEY_TO_NOTE["7"]] ? "bg-blue-400" : "bg-gray-800"}`}
           >
-            <span className="text-xs text-white absolute bottom-2 left-1/2 transform -translate-x-1/2">7</span>
+            <span className="-translate-x-1/2 absolute bottom-2 left-1/2 transform text-white text-xs">7</span>
           </div>
         </div>
       </div>
@@ -242,13 +229,15 @@ export default function MidiKeyboard({ id, data }: MidiKeyboardProps) {
   return (
     <Card className="w-96 shadow-md">
       <CardHeader className="bg-indigo-100 py-2">
-        <CardTitle className="text-sm font-medium">MIDI Keyboard</CardTitle>
+        <CardTitle className="font-medium text-sm">MIDI Keyboard</CardTitle>
       </CardHeader>
       <CardContent className="p-4">
         <div className="space-y-4">
           <div className="space-y-2">
             <div className="flex justify-between">
-              <label className="text-xs">Waveform</label>
+              <label htmlFor="waveform-select" className="text-xs">
+                Waveform
+              </label>
             </div>
             <Select value={waveform} onValueChange={(value) => updateParameter("waveform", value)}>
               <SelectTrigger>
@@ -265,10 +254,13 @@ export default function MidiKeyboard({ id, data }: MidiKeyboardProps) {
 
           <div className="space-y-2">
             <div className="flex justify-between">
-              <label className="text-xs">Attack (s)</label>
+              <label htmlFor="attack-slider" className="text-xs">
+                Attack (s)
+              </label>
               <span className="text-xs">{attack.toFixed(2)}</span>
             </div>
             <Slider
+              id="attack-slider"
               value={[attack]}
               min={0.01}
               max={1}
@@ -279,10 +271,13 @@ export default function MidiKeyboard({ id, data }: MidiKeyboardProps) {
 
           <div className="space-y-2">
             <div className="flex justify-between">
-              <label className="text-xs">Release (s)</label>
+              <label htmlFor="release-slider" className="text-xs">
+                Release (s)
+              </label>
               <span className="text-xs">{release.toFixed(2)}</span>
             </div>
             <Slider
+              id="release-slider"
               value={[release]}
               min={0.01}
               max={2}
@@ -293,16 +288,15 @@ export default function MidiKeyboard({ id, data }: MidiKeyboardProps) {
 
           {renderKeyboard()}
 
-          <div className="text-xs text-gray-500 mt-2">
+          <div className="mt-2 text-gray-500 text-xs">
             <p>Press keys to play notes (Z-M: lower octave, Q-I: upper octave)</p>
             <p>Black keys: S, D, G, H, J, 2, 3, 5, 6, 7</p>
           </div>
         </div>
 
         {/* Output handle */}
-        <Handle type="source" position={Position.Right} id="output" className="w-2 h-2 bg-indigo-500" />
+        <Handle type="source" position={Position.Right} id="output" className="h-2 w-2 bg-indigo-500" />
       </CardContent>
     </Card>
   )
 }
-
