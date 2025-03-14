@@ -3,8 +3,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Slider } from "@/components/ui/slider"
+import { Handle, Position } from "@xyflow/react"
 import { useCallback, useEffect, useRef, useState } from "react"
-import { Handle, Position } from "reactflow"
 
 // Define the mapping of keyboard keys to MIDI notes
 const KEY_TO_NOTE: Record<string, number> = {
@@ -55,7 +55,7 @@ interface MidiKeyboardProps {
   }
 }
 
-export default function MidiKeyboard({ id, data }: MidiKeyboardProps) {
+export function MidiKeyboard({ id, data }: MidiKeyboardProps) {
   const { updateNodeData, onNoteOn, onNoteOff } = data
   const waveform = data.waveform || "sine"
   const attack = data.attack || 0.05
@@ -154,11 +154,11 @@ export default function MidiKeyboard({ id, data }: MidiKeyboardProps) {
             return (
               <div
                 key={key}
-                className={`flex flex-1 items-end justify-center rounded-b border border-gray-300 pb-2 ${
-                  isActive ? "bg-blue-200" : "bg-white"
+                className={`flex flex-1 items-end justify-center rounded-b border border-border pb-2 ${
+                  isActive ? "bg-blue-500/30 dark:bg-blue-500/50" : "bg-background dark:bg-background"
                 }`}
               >
-                <span className="text-gray-500 text-xs uppercase">{key}</span>
+                <span className="text-muted-foreground text-xs uppercase">{key}</span>
               </div>
             )
           })}
@@ -168,56 +168,66 @@ export default function MidiKeyboard({ id, data }: MidiKeyboardProps) {
         <div className="absolute top-0 left-0 flex w-full">
           {/* First octave */}
           <div className="invisible flex-1" /> {/* C */}
-          <div className={`-ml-4 relative z-10 h-20 w-8 rounded-b ${activeNotes[KEY_TO_NOTE.s] ? "bg-blue-400" : "bg-gray-800"}`}>
+          <div
+            className={`-ml-4 relative z-10 h-20 w-8 rounded-b ${activeNotes[KEY_TO_NOTE.s] ? "bg-blue-500/70 dark:bg-blue-400/70" : "bg-zinc-800 dark:bg-zinc-900"}`}
+          >
             <span className="-translate-x-1/2 absolute bottom-2 left-1/2 transform text-white text-xs">s</span>
           </div>
           <div className="invisible flex-1" /> {/* D */}
-          <div className={`-ml-4 relative z-10 h-20 w-8 rounded-b ${activeNotes[KEY_TO_NOTE.d] ? "bg-blue-400" : "bg-gray-800"}`}>
+          <div
+            className={`-ml-4 relative z-10 h-20 w-8 rounded-b ${activeNotes[KEY_TO_NOTE.d] ? "bg-blue-500/70 dark:bg-blue-400/70" : "bg-zinc-800 dark:bg-zinc-900"}`}
+          >
             <span className="-translate-x-1/2 absolute bottom-2 left-1/2 transform text-white text-xs">d</span>
           </div>
           <div className="invisible flex-1" /> {/* E - no black key */}
           <div className="invisible flex-1" /> {/* F */}
-          <div className={`-ml-4 relative z-10 h-20 w-8 rounded-b ${activeNotes[KEY_TO_NOTE.g] ? "bg-blue-400" : "bg-gray-800"}`}>
+          <div
+            className={`-ml-4 relative z-10 h-20 w-8 rounded-b ${activeNotes[KEY_TO_NOTE.g] ? "bg-blue-500/70 dark:bg-blue-400/70" : "bg-zinc-800 dark:bg-zinc-900"}`}
+          >
             <span className="-translate-x-1/2 absolute bottom-2 left-1/2 transform text-white text-xs">g</span>
           </div>
           <div className="invisible flex-1" /> {/* G */}
-          <div className={`-ml-4 relative z-10 h-20 w-8 rounded-b ${activeNotes[KEY_TO_NOTE.h] ? "bg-blue-400" : "bg-gray-800"}`}>
+          <div
+            className={`-ml-4 relative z-10 h-20 w-8 rounded-b ${activeNotes[KEY_TO_NOTE.h] ? "bg-blue-500/70 dark:bg-blue-400/70" : "bg-zinc-800 dark:bg-zinc-900"}`}
+          >
             <span className="-translate-x-1/2 absolute bottom-2 left-1/2 transform text-white text-xs">h</span>
           </div>
           <div className="invisible flex-1" /> {/* A */}
-          <div className={`-ml-4 relative z-10 h-20 w-8 rounded-b ${activeNotes[KEY_TO_NOTE.j] ? "bg-blue-400" : "bg-gray-800"}`}>
+          <div
+            className={`-ml-4 relative z-10 h-20 w-8 rounded-b ${activeNotes[KEY_TO_NOTE.j] ? "bg-blue-500/70 dark:bg-blue-400/70" : "bg-zinc-800 dark:bg-zinc-900"}`}
+          >
             <span className="-translate-x-1/2 absolute bottom-2 left-1/2 transform text-white text-xs">j</span>
           </div>
           <div className="invisible flex-1" /> {/* B - no black key */}
           {/* Second octave */}
           <div className="invisible flex-1" /> {/* C */}
           <div
-            className={`-ml-4 relative z-10 h-20 w-8 rounded-b ${activeNotes[KEY_TO_NOTE["2"]] ? "bg-blue-400" : "bg-gray-800"}`}
+            className={`-ml-4 relative z-10 h-20 w-8 rounded-b ${activeNotes[KEY_TO_NOTE["2"]] ? "bg-blue-500/70 dark:bg-blue-400/70" : "bg-zinc-800 dark:bg-zinc-900"}`}
           >
             <span className="-translate-x-1/2 absolute bottom-2 left-1/2 transform text-white text-xs">2</span>
           </div>
           <div className="invisible flex-1" /> {/* D */}
           <div
-            className={`-ml-4 relative z-10 h-20 w-8 rounded-b ${activeNotes[KEY_TO_NOTE["3"]] ? "bg-blue-400" : "bg-gray-800"}`}
+            className={`-ml-4 relative z-10 h-20 w-8 rounded-b ${activeNotes[KEY_TO_NOTE["3"]] ? "bg-blue-500/70 dark:bg-blue-400/70" : "bg-zinc-800 dark:bg-zinc-900"}`}
           >
             <span className="-translate-x-1/2 absolute bottom-2 left-1/2 transform text-white text-xs">3</span>
           </div>
           <div className="invisible flex-1" /> {/* E - no black key */}
           <div className="invisible flex-1" /> {/* F */}
           <div
-            className={`-ml-4 relative z-10 h-20 w-8 rounded-b ${activeNotes[KEY_TO_NOTE["5"]] ? "bg-blue-400" : "bg-gray-800"}`}
+            className={`-ml-4 relative z-10 h-20 w-8 rounded-b ${activeNotes[KEY_TO_NOTE["5"]] ? "bg-blue-500/70 dark:bg-blue-400/70" : "bg-zinc-800 dark:bg-zinc-900"}`}
           >
             <span className="-translate-x-1/2 absolute bottom-2 left-1/2 transform text-white text-xs">5</span>
           </div>
           <div className="invisible flex-1" /> {/* G */}
           <div
-            className={`-ml-4 relative z-10 h-20 w-8 rounded-b ${activeNotes[KEY_TO_NOTE["6"]] ? "bg-blue-400" : "bg-gray-800"}`}
+            className={`-ml-4 relative z-10 h-20 w-8 rounded-b ${activeNotes[KEY_TO_NOTE["6"]] ? "bg-blue-500/70 dark:bg-blue-400/70" : "bg-zinc-800 dark:bg-zinc-900"}`}
           >
             <span className="-translate-x-1/2 absolute bottom-2 left-1/2 transform text-white text-xs">6</span>
           </div>
           <div className="invisible flex-1" /> {/* A */}
           <div
-            className={`-ml-4 relative z-10 h-20 w-8 rounded-b ${activeNotes[KEY_TO_NOTE["7"]] ? "bg-blue-400" : "bg-gray-800"}`}
+            className={`-ml-4 relative z-10 h-20 w-8 rounded-b ${activeNotes[KEY_TO_NOTE["7"]] ? "bg-blue-500/70 dark:bg-blue-400/70" : "bg-zinc-800 dark:bg-zinc-900"}`}
           >
             <span className="-translate-x-1/2 absolute bottom-2 left-1/2 transform text-white text-xs">7</span>
           </div>
@@ -227,15 +237,15 @@ export default function MidiKeyboard({ id, data }: MidiKeyboardProps) {
   }
 
   return (
-    <Card className="w-96 shadow-md">
-      <CardHeader className="bg-indigo-100 py-2">
+    <Card className="w-96 gap-0 rounded-xl py-0 shadow-md">
+      <CardHeader className="gap-0 rounded-t-xl bg-indigo-100 py-2 pb-2 dark:bg-indigo-900/30">
         <CardTitle className="font-medium text-sm">MIDI Keyboard</CardTitle>
       </CardHeader>
       <CardContent className="p-4">
         <div className="space-y-4">
           <div className="space-y-2">
             <div className="flex justify-between">
-              <label htmlFor="waveform-select" className="text-xs">
+              <label htmlFor="waveform-select" className="text-foreground text-xs">
                 Waveform
               </label>
             </div>
@@ -254,10 +264,10 @@ export default function MidiKeyboard({ id, data }: MidiKeyboardProps) {
 
           <div className="space-y-2">
             <div className="flex justify-between">
-              <label htmlFor="attack-slider" className="text-xs">
+              <label htmlFor="attack-slider" className="text-foreground text-xs">
                 Attack (s)
               </label>
-              <span className="text-xs">{attack.toFixed(2)}</span>
+              <span className="text-foreground text-xs">{attack.toFixed(2)}</span>
             </div>
             <Slider
               id="attack-slider"
@@ -271,10 +281,10 @@ export default function MidiKeyboard({ id, data }: MidiKeyboardProps) {
 
           <div className="space-y-2">
             <div className="flex justify-between">
-              <label htmlFor="release-slider" className="text-xs">
+              <label htmlFor="release-slider" className="text-foreground text-xs">
                 Release (s)
               </label>
-              <span className="text-xs">{release.toFixed(2)}</span>
+              <span className="text-foreground text-xs">{release.toFixed(2)}</span>
             </div>
             <Slider
               id="release-slider"
@@ -288,7 +298,7 @@ export default function MidiKeyboard({ id, data }: MidiKeyboardProps) {
 
           {renderKeyboard()}
 
-          <div className="mt-2 text-gray-500 text-xs">
+          <div className="mt-2 text-muted-foreground text-xs">
             <p>Press keys to play notes (Z-M: lower octave, Q-I: upper octave)</p>
             <p>Black keys: S, D, G, H, J, 2, 3, 5, 6, 7</p>
           </div>

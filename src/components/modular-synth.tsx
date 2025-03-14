@@ -4,39 +4,49 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Slider } from "@/components/ui/slider"
+import {
+  Background,
+  BackgroundVariant,
+  type Connection,
+  Controls,
+  type Edge,
+  Handle,
+  MiniMap,
+  type Node,
+  type NodeProps,
+  type NodeTypes,
+  Position,
+  ReactFlow,
+  addEdge,
+  useEdgesState,
+  useNodesState,
+  useReactFlow,
+} from "@xyflow/react"
 import { Keyboard, Plus, Volume2, AudioWaveformIcon as Waveform } from "lucide-react"
 import { useCallback, useEffect, useRef } from "react"
-import ReactFlow, {
-  MiniMap,
-  Controls,
-  Background,
-  useNodesState,
-  useEdgesState,
-  addEdge,
-  type Connection,
-  type Edge,
-  type Node,
-  type NodeTypes,
-  type NodeProps,
-  Handle,
-  Position,
-  useReactFlow,
-  BackgroundVariant,
-} from "reactflow"
-import "reactflow/dist/style.css"
 import { AudioEngine } from "./audio-engine"
-import MidiKeyboard from "./midi-keyboard"
+import { MidiKeyboard } from "./midi-keyboard"
+import "@xyflow/react/dist/style.css"
 
 // Initialize the audio engine
 const audioEngine = new AudioEngine()
 
+// Define custom node data types
+interface NodeData {
+  updateNodeData: (id: string, data: any) => void
+  [key: string]: any
+}
+
+// Define custom node types
+type CustomNode = Node<NodeData>
+
 // Custom node components
-function OscillatorNode({ id, data }: NodeProps) {
+function OscillatorNode({ id, data }: NodeProps<CustomNode>) {
   const updateNodeData = data.updateNodeData
 
   return (
-    <Card className="w-64 shadow-md">
-      <CardHeader className="bg-orange-100 py-2 dark:bg-orange-900/30">
+    <Card className="w-64 gap-0 rounded-xl py-0 shadow-md">
+      <CardHeader className="gap-0 rounded-t-xl bg-orange-100 py-2 pb-2 dark:bg-orange-900/30">
         <CardTitle className="font-medium text-sm">VCO (Oscillator)</CardTitle>
       </CardHeader>
       <CardContent className="p-4">
@@ -45,7 +55,7 @@ function OscillatorNode({ id, data }: NodeProps) {
             <div className="flex justify-between">
               <p className="text-xs">Waveform</p>
             </div>
-            <Select defaultValue={data.waveform} onValueChange={(value) => updateNodeData(id, { waveform: value })}>
+            <Select defaultValue={data.waveform as string} onValueChange={(value) => updateNodeData(id, { waveform: value })}>
               <SelectTrigger>
                 <SelectValue placeholder="Waveform" />
               </SelectTrigger>
@@ -61,10 +71,10 @@ function OscillatorNode({ id, data }: NodeProps) {
           <div className="relative space-y-2">
             <div className="flex justify-between">
               <p className="text-xs">Frequency (Hz)</p>
-              <span className="text-xs">{data.frequency} Hz</span>
+              <span className="text-xs">{data.frequency as number} Hz</span>
             </div>
             <Slider
-              value={[data.frequency]}
+              value={[data.frequency as number]}
               min={20}
               max={2000}
               step={1}
@@ -86,10 +96,10 @@ function OscillatorNode({ id, data }: NodeProps) {
           <div className="relative space-y-2">
             <div className="flex justify-between">
               <p className="text-xs">Detune (cents)</p>
-              <span className="text-xs">{data.detune}</span>
+              <span className="text-xs">{data.detune as number}</span>
             </div>
             <Slider
-              value={[data.detune]}
+              value={[data.detune as number]}
               min={-100}
               max={100}
               step={1}
@@ -116,12 +126,12 @@ function OscillatorNode({ id, data }: NodeProps) {
   )
 }
 
-function FilterNode({ id, data }: NodeProps) {
+function FilterNode({ id, data }: NodeProps<CustomNode>) {
   const updateNodeData = data.updateNodeData
 
   return (
-    <Card className="w-64 shadow-md">
-      <CardHeader className="bg-blue-100 py-2 dark:bg-blue-900/30">
+    <Card className="w-64 gap-0 rounded-xl py-0 shadow-md">
+      <CardHeader className="gap-0 rounded-t-xl bg-blue-100 py-2 pb-2 dark:bg-blue-900/30">
         <CardTitle className="font-medium text-sm">VCF (Filter)</CardTitle>
       </CardHeader>
       <CardContent className="p-4">
@@ -130,7 +140,7 @@ function FilterNode({ id, data }: NodeProps) {
             <div className="flex justify-between">
               <p className="text-xs">Filter Type</p>
             </div>
-            <Select defaultValue={data.type} onValueChange={(value) => updateNodeData(id, { type: value })}>
+            <Select defaultValue={data.type as string} onValueChange={(value) => updateNodeData(id, { type: value })}>
               <SelectTrigger>
                 <SelectValue placeholder="Filter Type" />
               </SelectTrigger>
@@ -146,10 +156,10 @@ function FilterNode({ id, data }: NodeProps) {
           <div className="relative space-y-2">
             <div className="flex justify-between">
               <p className="text-xs">Cutoff Frequency (Hz)</p>
-              <span className="text-xs">{data.frequency} Hz</span>
+              <span className="text-xs">{data.frequency as number} Hz</span>
             </div>
             <Slider
-              value={[data.frequency]}
+              value={[data.frequency as number]}
               min={20}
               max={20000}
               step={1}
@@ -171,10 +181,10 @@ function FilterNode({ id, data }: NodeProps) {
           <div className="relative space-y-2">
             <div className="flex justify-between">
               <p className="text-xs">Resonance (Q)</p>
-              <span className="text-xs">{data.Q.toFixed(1)}</span>
+              <span className="text-xs">{(data.Q as number).toFixed(1)}</span>
             </div>
             <Slider
-              value={[data.Q]}
+              value={[data.Q as number]}
               min={0.1}
               max={20}
               step={0.1}
@@ -204,12 +214,12 @@ function FilterNode({ id, data }: NodeProps) {
   )
 }
 
-function AmplifierNode({ id, data }: NodeProps) {
+function AmplifierNode({ id, data }: NodeProps<CustomNode>) {
   const updateNodeData = data.updateNodeData
 
   return (
-    <Card className="w-64 shadow-md">
-      <CardHeader className="bg-green-100 py-2 dark:bg-green-900/30">
+    <Card className="w-64 gap-0 rounded-xl py-0 shadow-md">
+      <CardHeader className="gap-0 rounded-t-xl bg-green-100 py-2 pb-2 dark:bg-green-900/30">
         <CardTitle className="font-medium text-sm">VCA (Amplifier)</CardTitle>
       </CardHeader>
       <CardContent className="p-4">
@@ -217,10 +227,10 @@ function AmplifierNode({ id, data }: NodeProps) {
           <div className="relative space-y-2">
             <div className="flex justify-between">
               <p className="text-xs">Gain</p>
-              <span className="text-xs">{data.gain.toFixed(2)}</span>
+              <span className="text-xs">{(data.gain as number).toFixed(2)}</span>
             </div>
             <Slider
-              value={[data.gain]}
+              value={[data.gain as number]}
               min={0}
               max={1}
               step={0.01}
@@ -250,12 +260,12 @@ function AmplifierNode({ id, data }: NodeProps) {
   )
 }
 
-function LFONode({ id, data }: NodeProps) {
+function LFONode({ id, data }: NodeProps<CustomNode>) {
   const updateNodeData = data.updateNodeData
 
   return (
-    <Card className="w-64 shadow-md">
-      <CardHeader className="bg-purple-100 py-2 dark:bg-purple-900/30">
+    <Card className="w-64 gap-0 rounded-xl py-0 shadow-md">
+      <CardHeader className="gap-0 rounded-t-xl bg-purple-100 py-2 pb-2 dark:bg-purple-900/30">
         <CardTitle className="font-medium text-sm">LFO (Low Frequency Oscillator)</CardTitle>
       </CardHeader>
       <CardContent className="p-4">
@@ -264,7 +274,7 @@ function LFONode({ id, data }: NodeProps) {
             <div className="flex justify-between">
               <p className="text-xs">Waveform</p>
             </div>
-            <Select defaultValue={data.waveform} onValueChange={(value) => updateNodeData(id, { waveform: value })}>
+            <Select defaultValue={data.waveform as string} onValueChange={(value) => updateNodeData(id, { waveform: value })}>
               <SelectTrigger>
                 <SelectValue placeholder="Waveform" />
               </SelectTrigger>
@@ -280,10 +290,15 @@ function LFONode({ id, data }: NodeProps) {
           <div className="relative space-y-2">
             <div className="flex justify-between">
               <p className="text-xs">Rate (Hz)</p>
-              <span className="text-xs">{data.frequency < 0.01 ? data.frequency.toFixed(3) : data.frequency.toFixed(2)} Hz</span>
+              <span className="text-xs">
+                {(data.frequency as number) < 0.01
+                  ? (data.frequency as number).toFixed(3)
+                  : (data.frequency as number).toFixed(2)}{" "}
+                Hz
+              </span>
             </div>
             <Slider
-              value={[data.frequency]}
+              value={[data.frequency as number]}
               min={0.001}
               max={20}
               step={0.001}
@@ -305,10 +320,10 @@ function LFONode({ id, data }: NodeProps) {
           <div className="relative space-y-2">
             <div className="flex justify-between">
               <p className="text-xs">Amplitude</p>
-              <span className="text-xs">{data.amplitude.toFixed(2)}</span>
+              <span className="text-xs">{(data.amplitude as number).toFixed(2)}</span>
             </div>
             <Slider
-              value={[data.amplitude]}
+              value={[data.amplitude as number]}
               min={0}
               max={1}
               step={0.01}
@@ -330,10 +345,10 @@ function LFONode({ id, data }: NodeProps) {
           <div className="space-y-2">
             <div className="flex justify-between">
               <p className="text-xs">Modulation Depth</p>
-              <span className="text-xs">{data.modDepth ? data.modDepth.toFixed(2) : "1.00"}</span>
+              <span className="text-xs">{data.modDepth ? (data.modDepth as number).toFixed(2) : "1.00"}</span>
             </div>
             <Slider
-              value={[data.modDepth || 1]}
+              value={[(data.modDepth as number) || 1]}
               min={0.1}
               max={10}
               step={0.1}
@@ -349,7 +364,7 @@ function LFONode({ id, data }: NodeProps) {
   )
 }
 
-function MidiKeyboardNode({ id, data }: NodeProps) {
+function MidiKeyboardNode({ id, data }: NodeProps<CustomNode>) {
   // Ensure audio context is started when MIDI node is created
   useEffect(() => {
     audioEngine.start()
@@ -377,6 +392,7 @@ function MidiKeyboardNode({ id, data }: NodeProps) {
     ...data,
     onNoteOn: handleNoteOn,
     onNoteOff: handleNoteOff,
+    updateNodeData: data.updateNodeData,
   }
 
   return <MidiKeyboard id={id} data={nodeData} />
@@ -384,8 +400,8 @@ function MidiKeyboardNode({ id, data }: NodeProps) {
 
 function OutputNode() {
   return (
-    <Card className="w-32 shadow-md">
-      <CardHeader className="bg-red-100 py-2 dark:bg-red-900/30">
+    <Card className="w-32 gap-0 rounded-xl py-0 shadow-md">
+      <CardHeader className="gap-0 rounded-t-xl bg-red-100 py-2 pb-2 dark:bg-red-900/30">
         <CardTitle className="font-medium text-sm">Output</CardTitle>
       </CardHeader>
       <CardContent className="p-4">
@@ -457,11 +473,11 @@ function ExamplePatches({ onCreatePatch }: { onCreatePatch: (patchType: string) 
 }
 
 // Update the ModularSynth component to include the explanation
-export default function ModularSynth() {
+export function ModularSynth() {
   const reactFlowWrapper = useRef<HTMLDivElement>(null)
-  const [nodes, setNodes, onNodesChange] = useNodesState([])
-  const [edges, setEdges, onEdgesChange] = useEdgesState([])
-  const { project } = useReactFlow()
+  const [nodes, setNodes, onNodesChange] = useNodesState<CustomNode>([])
+  const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([])
+  const { screenToFlowPosition } = useReactFlow()
 
   // Update node data
   const updateNodeData = useCallback(
@@ -510,9 +526,9 @@ export default function ModularSynth() {
       // Ensure audio context is started when a node is added
       audioEngine.start()
 
-      const position = project({ x: Math.random() * 400, y: Math.random() * 400 })
+      const position = screenToFlowPosition({ x: Math.random() * 400, y: Math.random() * 400 })
 
-      const newNode: Node = {
+      const newNode: CustomNode = {
         id: `${type}-${Date.now()}`,
         type,
         position,
@@ -574,7 +590,7 @@ export default function ModularSynth() {
 
       return newNode
     },
-    [project, setNodes, updateNodeData],
+    [screenToFlowPosition, setNodes, updateNodeData],
   )
 
   // Create example patches
@@ -614,15 +630,19 @@ export default function ModularSynth() {
             setNodes((nds) =>
               nds.map((node) => {
                 if (node.id === vco.id) {
-                  node.position = { x: 100, y: 100 }
-                } else if (node.id === vcf.id) {
-                  node.position = { x: 400, y: 100 }
-                } else if (node.id === vca.id) {
-                  node.position = { x: 700, y: 100 }
-                } else if (node.id === output.id) {
-                  node.position = { x: 1000, y: 100 }
-                } else if (node.id === lfo.id) {
-                  node.position = { x: 400, y: 300 }
+                  return { ...node, position: { x: 100, y: 100 } }
+                }
+                if (node.id === vcf.id) {
+                  return { ...node, position: { x: 400, y: 100 } }
+                }
+                if (node.id === vca.id) {
+                  return { ...node, position: { x: 700, y: 100 } }
+                }
+                if (node.id === output.id) {
+                  return { ...node, position: { x: 1000, y: 100 } }
+                }
+                if (node.id === lfo.id) {
+                  return { ...node, position: { x: 400, y: 300 } }
                 }
                 return node
               }),
@@ -682,13 +702,16 @@ export default function ModularSynth() {
             setNodes((nds) =>
               nds.map((node) => {
                 if (node.id === vco.id) {
-                  node.position = { x: 100, y: 100 }
-                } else if (node.id === vca.id) {
-                  node.position = { x: 400, y: 100 }
-                } else if (node.id === output.id) {
-                  node.position = { x: 700, y: 100 }
-                } else if (node.id === lfo.id) {
-                  node.position = { x: 400, y: 300 }
+                  return { ...node, position: { x: 100, y: 100 } }
+                }
+                if (node.id === vca.id) {
+                  return { ...node, position: { x: 400, y: 100 } }
+                }
+                if (node.id === output.id) {
+                  return { ...node, position: { x: 700, y: 100 } }
+                }
+                if (node.id === lfo.id) {
+                  return { ...node, position: { x: 400, y: 300 } }
                 }
                 return node
               }),
@@ -741,13 +764,16 @@ export default function ModularSynth() {
             setNodes((nds) =>
               nds.map((node) => {
                 if (node.id === vco.id) {
-                  node.position = { x: 100, y: 100 }
-                } else if (node.id === vca.id) {
-                  node.position = { x: 400, y: 100 }
-                } else if (node.id === output.id) {
-                  node.position = { x: 700, y: 100 }
-                } else if (node.id === lfo.id) {
-                  node.position = { x: 100, y: 300 }
+                  return { ...node, position: { x: 100, y: 100 } }
+                }
+                if (node.id === vca.id) {
+                  return { ...node, position: { x: 400, y: 100 } }
+                }
+                if (node.id === output.id) {
+                  return { ...node, position: { x: 700, y: 100 } }
+                }
+                if (node.id === lfo.id) {
+                  return { ...node, position: { x: 100, y: 300 } }
                 }
                 return node
               }),
@@ -799,13 +825,16 @@ export default function ModularSynth() {
             setNodes((nds) =>
               nds.map((node) => {
                 if (node.id === midi.id) {
-                  node.position = { x: 100, y: 100 }
-                } else if (node.id === vcf.id) {
-                  node.position = { x: 500, y: 100 }
-                } else if (node.id === vca.id) {
-                  node.position = { x: 800, y: 100 }
-                } else if (node.id === output.id) {
-                  node.position = { x: 1100, y: 100 }
+                  return { ...node, position: { x: 100, y: 100 } }
+                }
+                if (node.id === vcf.id) {
+                  return { ...node, position: { x: 500, y: 100 } }
+                }
+                if (node.id === vca.id) {
+                  return { ...node, position: { x: 800, y: 100 } }
+                }
+                if (node.id === output.id) {
+                  return { ...node, position: { x: 1100, y: 100 } }
                 }
                 return node
               }),
@@ -854,11 +883,13 @@ export default function ModularSynth() {
       setNodes((nds) =>
         nds.map((node) => {
           if (node.id === vcf.id) {
-            node.position = { x: 400, y: 100 }
-          } else if (node.id === vca.id) {
-            node.position = { x: 700, y: 100 }
-          } else if (node.id === output.id) {
-            node.position = { x: 1000, y: 100 }
+            return { ...node, position: { x: 400, y: 100 } }
+          }
+          if (node.id === vca.id) {
+            return { ...node, position: { x: 700, y: 100 } }
+          }
+          if (node.id === output.id) {
+            return { ...node, position: { x: 1000, y: 100 } }
           }
           return node
         }),
@@ -935,7 +966,8 @@ export default function ModularSynth() {
             fitView
             snapToGrid
             snapGrid={[20, 20]}
-            className="dark:bg-background"
+            // className="dark:bg-background"
+            colorMode="dark"
           >
             <Controls />
             <MiniMap />

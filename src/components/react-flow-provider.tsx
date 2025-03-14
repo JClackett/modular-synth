@@ -1,7 +1,7 @@
 "use client"
 
+import { ReactFlowProvider } from "@xyflow/react"
 import type { ReactNode } from "react"
-import { ReactFlowProvider } from "reactflow"
 
 interface ModularSynthProviderProps {
   children: ReactNode
@@ -10,4 +10,3 @@ interface ModularSynthProviderProps {
 export function ModularSynthProvider({ children }: ModularSynthProviderProps) {
   return <ReactFlowProvider>{children}</ReactFlowProvider>
 }
-
