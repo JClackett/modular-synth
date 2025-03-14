@@ -1,9 +1,9 @@
 "use client"
 
-import { Button } from "@/src/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/src/components/ui/card"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/src/components/ui/select"
-import { Slider } from "@/src/components/ui/slider"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Slider } from "@/components/ui/slider"
 import { Keyboard, Plus, Volume2, AudioWaveformIcon as Waveform } from "lucide-react"
 import { useCallback, useEffect, useRef } from "react"
 import ReactFlow, {
@@ -36,14 +36,14 @@ function OscillatorNode({ id, data }: NodeProps) {
 
   return (
     <Card className="w-64 shadow-md">
-      <CardHeader className="bg-orange-100 py-2">
+      <CardHeader className="bg-orange-100 py-2 dark:bg-orange-900/30">
         <CardTitle className="font-medium text-sm">VCO (Oscillator)</CardTitle>
       </CardHeader>
       <CardContent className="p-4">
         <div className="space-y-4">
           <div className="space-y-2">
             <div className="flex justify-between">
-              <label className="text-xs">Waveform</label>
+              <p className="text-xs">Waveform</p>
             </div>
             <Select defaultValue={data.waveform} onValueChange={(value) => updateNodeData(id, { waveform: value })}>
               <SelectTrigger>
@@ -60,7 +60,7 @@ function OscillatorNode({ id, data }: NodeProps) {
 
           <div className="relative space-y-2">
             <div className="flex justify-between">
-              <label className="text-xs">Frequency (Hz)</label>
+              <p className="text-xs">Frequency (Hz)</p>
               <span className="text-xs">{data.frequency} Hz</span>
             </div>
             <Slider
@@ -85,7 +85,7 @@ function OscillatorNode({ id, data }: NodeProps) {
 
           <div className="relative space-y-2">
             <div className="flex justify-between">
-              <label className="text-xs">Detune (cents)</label>
+              <p className="text-xs">Detune (cents)</p>
               <span className="text-xs">{data.detune}</span>
             </div>
             <Slider
@@ -121,14 +121,14 @@ function FilterNode({ id, data }: NodeProps) {
 
   return (
     <Card className="w-64 shadow-md">
-      <CardHeader className="bg-blue-100 py-2">
+      <CardHeader className="bg-blue-100 py-2 dark:bg-blue-900/30">
         <CardTitle className="font-medium text-sm">VCF (Filter)</CardTitle>
       </CardHeader>
       <CardContent className="p-4">
         <div className="space-y-4">
           <div className="space-y-2">
             <div className="flex justify-between">
-              <label className="text-xs">Filter Type</label>
+              <p className="text-xs">Filter Type</p>
             </div>
             <Select defaultValue={data.type} onValueChange={(value) => updateNodeData(id, { type: value })}>
               <SelectTrigger>
@@ -145,7 +145,7 @@ function FilterNode({ id, data }: NodeProps) {
 
           <div className="relative space-y-2">
             <div className="flex justify-between">
-              <label className="text-xs">Cutoff Frequency (Hz)</label>
+              <p className="text-xs">Cutoff Frequency (Hz)</p>
               <span className="text-xs">{data.frequency} Hz</span>
             </div>
             <Slider
@@ -170,7 +170,7 @@ function FilterNode({ id, data }: NodeProps) {
 
           <div className="relative space-y-2">
             <div className="flex justify-between">
-              <label className="text-xs">Resonance (Q)</label>
+              <p className="text-xs">Resonance (Q)</p>
               <span className="text-xs">{data.Q.toFixed(1)}</span>
             </div>
             <Slider
@@ -209,14 +209,14 @@ function AmplifierNode({ id, data }: NodeProps) {
 
   return (
     <Card className="w-64 shadow-md">
-      <CardHeader className="bg-green-100 py-2">
+      <CardHeader className="bg-green-100 py-2 dark:bg-green-900/30">
         <CardTitle className="font-medium text-sm">VCA (Amplifier)</CardTitle>
       </CardHeader>
       <CardContent className="p-4">
         <div className="space-y-4">
           <div className="relative space-y-2">
             <div className="flex justify-between">
-              <label className="text-xs">Gain</label>
+              <p className="text-xs">Gain</p>
               <span className="text-xs">{data.gain.toFixed(2)}</span>
             </div>
             <Slider
@@ -255,14 +255,14 @@ function LFONode({ id, data }: NodeProps) {
 
   return (
     <Card className="w-64 shadow-md">
-      <CardHeader className="bg-purple-100 py-2">
+      <CardHeader className="bg-purple-100 py-2 dark:bg-purple-900/30">
         <CardTitle className="font-medium text-sm">LFO (Low Frequency Oscillator)</CardTitle>
       </CardHeader>
       <CardContent className="p-4">
         <div className="space-y-4">
           <div className="space-y-2">
             <div className="flex justify-between">
-              <label className="text-xs">Waveform</label>
+              <p className="text-xs">Waveform</p>
             </div>
             <Select defaultValue={data.waveform} onValueChange={(value) => updateNodeData(id, { waveform: value })}>
               <SelectTrigger>
@@ -279,7 +279,7 @@ function LFONode({ id, data }: NodeProps) {
 
           <div className="relative space-y-2">
             <div className="flex justify-between">
-              <label className="text-xs">Rate (Hz)</label>
+              <p className="text-xs">Rate (Hz)</p>
               <span className="text-xs">{data.frequency < 0.01 ? data.frequency.toFixed(3) : data.frequency.toFixed(2)} Hz</span>
             </div>
             <Slider
@@ -304,7 +304,7 @@ function LFONode({ id, data }: NodeProps) {
 
           <div className="relative space-y-2">
             <div className="flex justify-between">
-              <label className="text-xs">Amplitude</label>
+              <p className="text-xs">Amplitude</p>
               <span className="text-xs">{data.amplitude.toFixed(2)}</span>
             </div>
             <Slider
@@ -329,7 +329,7 @@ function LFONode({ id, data }: NodeProps) {
 
           <div className="space-y-2">
             <div className="flex justify-between">
-              <label className="text-xs">Modulation Depth</label>
+              <p className="text-xs">Modulation Depth</p>
               <span className="text-xs">{data.modDepth ? data.modDepth.toFixed(2) : "1.00"}</span>
             </div>
             <Slider
@@ -350,8 +350,6 @@ function LFONode({ id, data }: NodeProps) {
 }
 
 function MidiKeyboardNode({ id, data }: NodeProps) {
-  const updateNodeData = data.updateNodeData
-
   // Ensure audio context is started when MIDI node is created
   useEffect(() => {
     audioEngine.start()
@@ -384,17 +382,15 @@ function MidiKeyboardNode({ id, data }: NodeProps) {
   return <MidiKeyboard id={id} data={nodeData} />
 }
 
-function OutputNode({ id, data }: NodeProps) {
-  const updateNodeData = data.updateNodeData
-
+function OutputNode() {
   return (
     <Card className="w-32 shadow-md">
-      <CardHeader className="bg-red-100 py-2">
+      <CardHeader className="bg-red-100 py-2 dark:bg-red-900/30">
         <CardTitle className="font-medium text-sm">Output</CardTitle>
       </CardHeader>
       <CardContent className="p-4">
         <div className="flex justify-center pt-2">
-          <Volume2 className="size-6 text-black-500" />
+          <Volume2 className="size-6" />
         </div>
         <div className="mt-4 text-center text-sm">
           <p>Audio Output</p>
@@ -420,14 +416,14 @@ const nodeTypes: NodeTypes = {
 // Add a component to demonstrate example patches
 function ExamplePatches({ onCreatePatch }: { onCreatePatch: (patchType: string) => void }) {
   return (
-    <div className="mb-4 rounded-lg bg-blue-50 p-4 text-sm">
+    <div className="mb-4 rounded-lg bg-blue-50 p-4 text-sm dark:bg-blue-950/50">
       <h3 className="mb-2 font-bold">Example Patches</h3>
       <div className="space-y-2">
         <Button
           onClick={() => onCreatePatch("filterSweep")}
           variant="outline"
           size="sm"
-          className="w-full justify-start bg-white hover:bg-blue-50"
+          className="w-full justify-start bg-white hover:bg-blue-50 dark:bg-background dark:hover:bg-blue-950/50"
         >
           Filter Sweep
         </Button>
@@ -435,7 +431,7 @@ function ExamplePatches({ onCreatePatch }: { onCreatePatch: (patchType: string) 
           onClick={() => onCreatePatch("tremolo")}
           variant="outline"
           size="sm"
-          className="w-full justify-start bg-white hover:bg-blue-50"
+          className="w-full justify-start bg-white hover:bg-blue-50 dark:bg-background dark:hover:bg-blue-950/50"
         >
           Tremolo Effect
         </Button>
@@ -443,7 +439,7 @@ function ExamplePatches({ onCreatePatch }: { onCreatePatch: (patchType: string) 
           onClick={() => onCreatePatch("vibrato")}
           variant="outline"
           size="sm"
-          className="w-full justify-start bg-white hover:bg-blue-50"
+          className="w-full justify-start bg-white hover:bg-blue-50 dark:bg-background dark:hover:bg-blue-950/50"
         >
           Vibrato
         </Button>
@@ -451,7 +447,7 @@ function ExamplePatches({ onCreatePatch }: { onCreatePatch: (patchType: string) 
           onClick={() => onCreatePatch("midiKeyboard")}
           variant="outline"
           size="sm"
-          className="w-full justify-start bg-white hover:bg-blue-50"
+          className="w-full justify-start bg-white hover:bg-blue-50 dark:bg-background dark:hover:bg-blue-950/50"
         >
           MIDI Keyboard
         </Button>
@@ -473,13 +469,7 @@ export default function ModularSynth() {
       setNodes((nds) =>
         nds.map((node) => {
           if (node.id === nodeId) {
-            return {
-              ...node,
-              data: {
-                ...node.data,
-                ...newData,
-              },
-            }
+            return { ...node, data: { ...node.data, ...newData } }
           }
           return node
         }),
@@ -584,7 +574,7 @@ export default function ModularSynth() {
 
       return newNode
     },
-    [project, setNodes],
+    [project, setNodes, updateNodeData],
   )
 
   // Create example patches
@@ -902,12 +892,12 @@ export default function ModularSynth() {
 
   return (
     <div className="flex h-screen w-full flex-col">
-      <div className="flex items-center justify-between border-b bg-gray-50 p-4">
+      <div className="flex items-center justify-between border-b bg-gray-50 p-4 dark:bg-gray-900/50">
         <h1 className="font-bold text-xl">Modular Synthesizer</h1>
       </div>
 
       <div className="flex flex-1">
-        <div className="flex w-64 flex-col gap-2 bg-gray-100 p-4">
+        <div className="flex w-64 flex-col gap-2 bg-gray-100 p-4 dark:bg-gray-900/30">
           <h2 className="mb-2 font-medium">Add Module</h2>
           <Button onClick={() => addNode("oscillator")} variant="outline" className="justify-start">
             <Waveform className="mr-2 h-4 w-4" /> VCO
@@ -933,7 +923,7 @@ export default function ModularSynth() {
           </div>
         </div>
 
-        <div className="flex-1" ref={reactFlowWrapper}>
+        <div className="flex-1 bg-background" ref={reactFlowWrapper}>
           <ReactFlow
             nodes={nodes}
             edges={edges}
@@ -945,10 +935,11 @@ export default function ModularSynth() {
             fitView
             snapToGrid
             snapGrid={[20, 20]}
+            className="dark:bg-background"
           >
             <Controls />
             <MiniMap />
-            <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
+            <Background variant={BackgroundVariant.Dots} gap={12} size={1} className="dark:bg-background" />
           </ReactFlow>
         </div>
       </div>

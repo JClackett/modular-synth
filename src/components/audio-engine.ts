@@ -11,10 +11,6 @@ export class AudioEngine {
   private isInitialized = false
   private debugMode = true // Enable debug mode
 
-  constructor() {
-    // AudioContext will be initialized on user interaction
-  }
-
   private initialize() {
     if (!this.isInitialized) {
       this.audioContext = new AudioContext()
@@ -138,8 +134,7 @@ export class AudioEngine {
           },
         })
 
-        if (this.debugMode)
-          console.log(`LFO created with frequency ${lfo.frequency.value}Hz and amplitude ${lfoGain.gain.value}`)
+        if (this.debugMode) console.log(`LFO created with frequency ${lfo.frequency.value}Hz and amplitude ${lfoGain.gain.value}`)
         break
       }
 
@@ -233,9 +228,7 @@ export class AudioEngine {
           lfoGain.gain.value = effectiveAmplitude
 
           if (this.debugMode)
-            console.log(
-              `LFO ${id} updated: amplitude=${amplitude}, modDepth=${modDepth}, effective=${effectiveAmplitude}`,
-            )
+            console.log(`LFO ${id} updated: amplitude=${amplitude}, modDepth=${modDepth}, effective=${effectiveAmplitude}`)
 
           // Update all modulation connections for this LFO
           this.updateModulationConnections(id)
@@ -280,7 +273,7 @@ export class AudioEngine {
     const nodeParams = this.nodeParams.get(nodeId) || {}
     const waveform = nodeParams.waveform || "sine"
     const attack = nodeParams.attack || 0.05
-    const release = nodeParams.release || 0.1
+    // const release = nodeParams.release || 0.1
 
     // Create oscillator for this note
     const osc = this.audioContext.createOscillator()
@@ -347,7 +340,7 @@ export class AudioEngine {
 
   // Convert MIDI note to frequency
   private midiNoteToFrequency(note: number): number {
-    return 440 * Math.pow(2, (note - 69) / 12)
+    return 440 * 2 ** ((note - 69) / 12)
   }
 
   // Update all modulation connections for a given source node
@@ -381,8 +374,7 @@ export class AudioEngine {
     }
     this.connections.get(sourceId)?.add(connectionId)
 
-    if (this.debugMode)
-      console.log(`Connecting: ${sourceId} -> ${targetId}, handles: ${sourceHandle} -> ${targetHandle}`)
+    if (this.debugMode) console.log(`Connecting: ${sourceId} -> ${targetId}, handles: ${sourceHandle} -> ${targetHandle}`)
 
     // Handle CV connections based on target handle
     if (targetHandle.endsWith("-cv")) {
@@ -456,9 +448,7 @@ export class AudioEngine {
         this.setupModulationConnection(sourceId, targetId, paramName, modulationAmount)
 
         if (this.debugMode)
-          console.log(
-            `CV modulation connected: ${sourceId} -> ${targetId}:${paramName} with amount ${modulationAmount}`,
-          )
+          console.log(`CV modulation connected: ${sourceId} -> ${targetId}:${paramName} with amount ${modulationAmount}`)
       } else {
         if (this.debugMode) console.error(`Target parameter not found for CV modulation`, { targetId, paramName })
       }
@@ -524,9 +514,7 @@ export class AudioEngine {
     modulationScaler.connect(targetAudioParam)
 
     if (this.debugMode)
-      console.log(
-        `Modulation connection setup: ${sourceId} -> ${targetId}:${targetParam} with amount ${effectiveModulation}`,
-      )
+      console.log(`Modulation connection setup: ${sourceId} -> ${targetId}:${targetParam} with amount ${effectiveModulation}`)
   }
 
   // Disconnect nodes with proper handling for CV modulation
@@ -542,8 +530,7 @@ export class AudioEngine {
     const connectionId = `${sourceId}:${sourceHandle}->${targetId}:${targetHandle}`
     this.connections.get(sourceId)?.delete(connectionId)
 
-    if (this.debugMode)
-      console.log(`Disconnecting: ${sourceId} -> ${targetId}, handles: ${sourceHandle} -> ${targetHandle}`)
+    if (this.debugMode) console.log(`Disconnecting: ${sourceId} -> ${targetId}, handles: ${sourceHandle} -> ${targetHandle}`)
 
     // Handle CV disconnections based on target handle
     if (targetHandle.endsWith("-cv")) {
@@ -608,4 +595,3 @@ export class AudioEngine {
     }
   }
 }
-
