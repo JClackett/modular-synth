@@ -46,8 +46,8 @@ export function OscillatorNode({ id, data, selected }: NodeProps<CustomNode>) {
             <Slider
               value={[data.frequency as number]}
               min={20}
-              max={2000}
-              step={1}
+              max={6000}
+              step={10}
               onValueChange={([value]) => updateNode(id, { frequency: value })}
             />
             {/* CV input for frequency */}
