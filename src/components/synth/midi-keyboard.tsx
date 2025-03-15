@@ -237,8 +237,8 @@ export function MidiKeyboard({ id, data }: MidiKeyboardProps) {
   }
 
   return (
-    <Card className="w-96 gap-0 rounded-xl py-0 shadow-md">
-      <CardHeader className="gap-0 rounded-t-xl bg-indigo-100 py-2 pb-2 dark:bg-indigo-900/30">
+    <Card className="w-96">
+      <CardHeader className="bg-indigo-100 dark:bg-indigo-900/30">
         <CardTitle className="font-medium text-sm">MIDI Keyboard</CardTitle>
       </CardHeader>
       <CardContent className="p-4">

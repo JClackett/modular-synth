@@ -1,6 +1,6 @@
 // Audio Engine for the Modular Synthesizer
 
-export class AudioEngine {
+class AudioEngine {
   private audioContext: AudioContext | null = null
   private nodes: Map<string, any> = new Map() // Changed to 'any' to store more complex objects
   private connections: Map<string, Set<string>> = new Map()
@@ -595,3 +595,5 @@ export class AudioEngine {
     }
   }
 }
+
+export const audioEngine = new AudioEngine()
