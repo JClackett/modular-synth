@@ -53,10 +53,8 @@ export const useStore = create<AudioStore>((set, get) => ({
       set({ isRunning: isRunning() })
     })
   },
-  onNodesChange(changes: any) {
-    set({
-      nodes: applyNodeChanges(changes, get().nodes),
-    })
+  onNodesChange(changes: NodeChange[]) {
+    set({ nodes: applyNodeChanges(changes, get().nodes) })
   },
   createNode(type: string) {
     const id = nanoid()
@@ -103,7 +101,7 @@ export const useStore = create<AudioStore>((set, get) => ({
   },
   addEdge(connection: Connection) {
     const id = createId()
-    const edge = { ...connection, id }
+    const edge = { ...connection, id, animated: true } satisfies Edge
     connect(edge.source, edge.target)
     set({ edges: [edge, ...get().edges] })
   },
