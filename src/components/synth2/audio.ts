@@ -1,3 +1,5 @@
+import type { Node } from "@xyflow/react"
+
 const context = new AudioContext()
 const nodes = new Map()
 
@@ -34,8 +36,8 @@ export function createInitialNodes() {
     { id: "oscillator1", type: "oscillator", data: { frequency: 220, detune: 0, type: "square" }, position: { x: -800, y: 0 } },
     { id: "filter1", type: "filter", data: { frequency: 220, type: "lowpass", q: 1 }, position: { x: -400, y: 0 } },
     { id: "amplifier1", type: "amplifier", data: { gain: 0.5 }, position: { x: 0, y: 0 } },
-    { id: "output1", type: "output", position: { x: 400, y: 0 }, data: {} },
-  ]
+    { id: "output1", type: "output", deletable: false, selectable: false, position: { x: 400, y: 0 }, data: {} },
+  ] as Node[]
 }
 
 export function isRunning() {

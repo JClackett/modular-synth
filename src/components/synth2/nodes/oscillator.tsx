@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Slider } from "@/components/ui/slider"
+import { cn } from "@/lib/utils"
 import { Handle, type Node, type NodeProps, Position } from "@xyflow/react"
 import type { OscData } from "../audio"
 import { useStore } from "../audio-store"
@@ -8,11 +9,11 @@ import { audioHandleStyle, cvHandleStyle } from "./utils"
 
 type CustomNode = Node<OscData>
 
-export function OscillatorNode({ id, data }: NodeProps<CustomNode>) {
+export function OscillatorNode({ id, data, selected }: NodeProps<CustomNode>) {
   const updateNode = useStore((s) => s.updateNode)
 
   return (
-    <Card className="w-64">
+    <Card className={cn("w-64", selected && "border-orange-500")}>
       <CardHeader className="bg-orange-100 dark:bg-orange-900/30">
         <CardTitle className="font-medium text-sm">VCO (Oscillator)</CardTitle>
       </CardHeader>

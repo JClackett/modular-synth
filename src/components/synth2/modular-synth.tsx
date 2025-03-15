@@ -5,7 +5,7 @@ import { Background, BackgroundVariant, Controls, MiniMap, type NodeTypes, React
 import { Keyboard, Plus, AudioWaveformIcon as Waveform } from "lucide-react"
 import { useShallow } from "zustand/react/shallow"
 import { useStore } from "./audio-store"
-import { AmplifierNode } from "./nodes/amp"
+import { AmplifierNode } from "./nodes/amplifier"
 import { FilterNode } from "./nodes/filter"
 import { OscillatorNode } from "./nodes/oscillator"
 import { OutputNode } from "./nodes/output"

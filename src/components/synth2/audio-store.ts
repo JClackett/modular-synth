@@ -69,18 +69,18 @@ export const useStore = create<AudioStore>((set, get) => ({
       case "amplifier": {
         const data = { gain: 0.5 } satisfies AmpData
         createAudioNode(id, type, data)
-        set({ nodes: [...get().nodes, { id, data, position }] })
+        set({ nodes: [...get().nodes, { id, type, data, position }] })
         break
       }
       case "filter": {
         const data = { frequency: 440, type: "lowpass" as BiquadFilterType, q: 1 } satisfies FilterData
         createAudioNode(id, type, data)
-        set({ nodes: [...get().nodes, { id, data, position }] })
+        set({ nodes: [...get().nodes, { id, type, data, position }] })
         break
       }
       case "output": {
         createAudioNode(id, type, undefined)
-        set({ nodes: [...get().nodes, { id, data: {}, position }] })
+        set({ nodes: [...get().nodes, { id, type, data: {}, position }] })
         break
       }
     }

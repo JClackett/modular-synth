@@ -1,19 +1,19 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Slider } from "@/components/ui/slider"
+import { cn } from "@/lib/utils"
 import { Handle, type Node, type NodeProps, Position } from "@xyflow/react"
 import type { FilterData } from "../audio"
 import { useStore } from "../audio-store"
 import { audioHandleStyle, cvHandleStyle } from "./utils"
-
 type CustomNode = Node<FilterData>
 
-export function FilterNode({ id, data }: NodeProps<CustomNode>) {
+export function FilterNode({ id, data, selected }: NodeProps<CustomNode>) {
   const updateNode = useStore((s) => s.updateNode)
 
   return (
-    <Card className="w-64 ">
-      <CardHeader className=" bg-blue-100 dark:bg-blue-900/30">
+    <Card className={cn("w-64", selected && "border-blue-500")}>
+      <CardHeader className="bg-blue-100 dark:bg-blue-900/30">
         <CardTitle className="font-medium text-sm">VCF (Filter)</CardTitle>
       </CardHeader>
       <CardContent className="p-4">
