@@ -3,7 +3,7 @@ import { ModularSynthProvider } from "@/components/react-flow-provider"
 import { LoaderIcon } from "lucide-react"
 import dynamic from "next/dynamic"
 
-const Synth = dynamic(() => import("../components/synth2/modular-synth"), {
+const Synth = dynamic(() => import("../components/synth/modular-synth"), {
   ssr: false,
   loading: () => (
     <div className="flex h-dvh w-full items-center justify-center">

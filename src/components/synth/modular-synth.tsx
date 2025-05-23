@@ -47,7 +47,7 @@ const nodeTypes: NodeTypes = {
 }
 
 // Update the ModularSynth component to include the explanation
-export function ModularSynth() {
+export default function ModularSynth() {
   const reactFlowWrapper = useRef<HTMLDivElement>(null)
   const [nodes, setNodes, onNodesChange] = useNodesState<CustomNode>([])
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([])
@@ -112,13 +112,13 @@ export function ModularSynth() {
       // Set default parameters based on node type
       switch (type) {
         case "oscillator":
-          newNode.data = { ...newNode.data, waveform: "sine", frequency: 440, detune: 0 }
+          newNode.data = { ...newNode.data, waveform: "sine", frequency: 110, detune: 0 }
           break
         case "filter":
           newNode.data = { ...newNode.data, type: "lowpass", frequency: 1000, Q: 1 }
           break
         case "amplifier":
-          newNode.data = { ...newNode.data, gain: 0.5 }
+          newNode.data = { ...newNode.data, gain: 0.3 }
           break
         case "lfo":
           newNode.data = { ...newNode.data, waveform: "sine", frequency: 0.1, amplitude: 0.5, modDepth: 5.0 }
@@ -141,11 +141,16 @@ export function ModularSynth() {
     [screenToFlowPosition, setNodes, updateNodeData],
   )
 
+  const isMounted = useRef(false)
   // Initialize with some default nodes
   useEffect(() => {
+    if (isMounted.current) return
+    isMounted.current = true
+
     if (nodes.length === 0) {
       const vcf = addNode("filter")
       const vca = addNode("amplifier")
+      const midi = addNode("midi")
       const output = addNode("output")
 
       // Position them in a logical flow
@@ -160,6 +165,9 @@ export function ModularSynth() {
           if (node.id === output.id) {
             return { ...node, position: { x: 1000, y: 100 } }
           }
+          if (node.id === midi.id) {
+            return { ...node, position: { x: -50, y: 100 } }
+          }
           return node
         }),
       )
@@ -169,6 +177,13 @@ export function ModularSynth() {
         onConnect({
           source: vcf.id,
           target: vca.id,
+          sourceHandle: "output",
+          targetHandle: "input",
+        })
+
+        onConnect({
+          source: midi.id,
+          target: vcf.id,
           sourceHandle: "output",
           targetHandle: "input",
         })
@@ -186,7 +201,7 @@ export function ModularSynth() {
   // Cleanup audio context on unmount
   useEffect(() => {
     return () => {
-      audioEngine.cleanup()
+      // audioEngine.cleanup()
     }
   }, [])
 
@@ -229,7 +244,7 @@ export function ModularSynth() {
             fitView
             snapToGrid
             snapGrid={[20, 20]}
-            colorMode="dark"
+            colorMode="light"
           >
             <Controls />
             <MiniMap />
